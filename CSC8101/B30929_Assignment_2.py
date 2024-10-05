@@ -9,25 +9,25 @@ class University:
     LecturerLst = [] # Available lectures
     StudentLst = [] # Available students
     
-    def __init__(me, universityName):
-        me.Name = universityName
+    def __init__(self, universityName):
+        self.Name = universityName
     
-    def Courses(me):
-        return me.CourseLst
+    def Courses(self):
+        return self.CourseLst
 
-    def Lecturers(me):
-        return me.LecturerLst
+    def Lecturers(self):
+        return self.LecturerLst
     
-    def Students(me):
-        return me.StudentLst
+    def Students(self):
+        return self.StudentLst
 
-    def AddDetials(me, course, lecturer, student):
+    def AddDetials(self, course, lecturer, student):
         if len(course) > 0:
-            me.CourseLst.append(course)
+            self.CourseLst.append(course)
         if len(lecturer) > 0:
-            me.LecturerLst.append(lecturer)
+            self.LecturerLst.append(lecturer)
         if len(student) > 0:
-            me.StudentLst.append(student)
+            self.StudentLst.append(student)
 
 # Create University object   
 myUniObj = University("Uganda Christian University")
