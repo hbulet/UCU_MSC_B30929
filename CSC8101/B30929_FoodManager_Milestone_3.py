@@ -28,7 +28,7 @@ class Donor(Person):
 
     def get_details(self):
         _details = super().get_details()
-        _details += ", Is Organisation: " + self.is_organisation
+        _details += ", Organisation: " + self.is_organisation
     
 
 class Refugee(Person):
@@ -49,33 +49,37 @@ class Unit:
     """"""
     id = ""
     name = ""
-    quantity_per_family_member = 0
-    def __init__(self, _name, _quantity_per_family_member) -> None:
+    def __init__(self, _name) -> None:
         self.id = str(uuid.uuid1())
         self.name = _name
-        self.quantity_per_family_member = _quantity_per_family_member
     
-    def get_name(self):
-        return self.name
-    
-    def get_unit_cap(self):
-        return self.quantity_per_family_member
+    def get_details(self):
+        return "NAME: " + self.name + ", ID:" + self.id
 
 class Food:
     """"""
     id = ""
     name = ""
-
-    def __init__(self, _name, _unit) -> None:
+    quantity_per_family_member = 0
+    def __init__(self, _name, _unit, _quantity_per_family_member) -> None:
         self.id = str(uuid.uuid1())
         self.name = _name
         self.unit = _unit
+        self.quantity_per_family_member = _quantity_per_family_member
         if not isinstance(_unit, Unit):
             raise TypeError("variable '_unit' must be of type 'Unit")
     
     def get_details(self):
         #return "Name: " + self.name + ", Contact: " + self.unit + ", Address: " + self.address
         pass
+
+    def get_unit_cap(self):
+        return self.quantity_per_family_member
+    
+    def set_unit_cap(self, _unit_cap):
+        if not isinstance(_unit_cap, int):
+            raise TypeError("variable '_unit_cap' must be of type 'int")
+        self.quantity_per_family_member = _unit_cap
         
 class Supply:
     id = ""
@@ -134,8 +138,8 @@ class Donation:
             raise TypeError("variable '_supply' must be of type 'Supply'")
         self.supply_list.append(_supply)
 
-    def get_donation(self):
-        pass
+    def get_supplies(self):
+        return self.supply_list
 
         
 class Distribution:
@@ -191,17 +195,20 @@ class StockCount:
 class Inventory:
     """"""
     id = ""
+    name = ""
     stock_count_list = []
     store_list = []
     donation_list = []
     distribution_list = []
     release_date = datetime.datetime.now
-    def __init__(self) -> None:
+    def __init__(self, _name) -> None:
         self.id = str(uuid.uuid1())
+        self.name = _name
 
     def get_stock_count(self, _food):
         if not isinstance(_food, Food):
             raise TypeError("variable '_food' must be of type 'Food'")
+        self.stock_count_list
 
     def get_stock_count_details(self):
         return ""    
@@ -209,6 +216,10 @@ class Inventory:
     def add_donation(self, _donation):
         if not isinstance(_donation, Donation):
             raise TypeError("variable '_donation' must be of type 'Donation'")
+    
+        if len(_donation.get_supplies()) == 0:
+            return False
+        
         return True
     
     def release_distibution(self, _distribution):
@@ -220,3 +231,43 @@ class Inventory:
         if not isinstance(_person, Person):
             raise TypeError("variable '_person' must be of type 'Person'")
         return True
+    
+    def get_details(self, _person):
+        if not isinstance(_person, Person):
+            raise TypeError("variable '_person' must be of type 'Person'")
+        return True
+    
+
+#------ Implementation --------------------------------------
+# Units to use
+unit_Kilos = Unit("Kilograms")
+unit_Liters = Unit("Litres")
+unit_Bunches = Unit("Bunches")
+
+# Foods to use
+food_Matooke = Food("Matooke", unit_Bunches, 1)
+food_Ugali = Food("Ugali", unit_Kilos, 2)
+food_Sugar = Food("Sugar", unit_Kilos, 1)
+food_Beans = Food("Beans", unit_Kilos, 2)
+food_CookingOil = Food("Cooking Oil", unit_Liters, 1)
+food_Salt = Food("Kitchen Salt", unit_Kilos, 1)
+
+# Donors
+donor_UG_Gvt = Donor("Uganda Government", "0700 153, 556", "Kampala", True)
+donor_UCU = Donor("Uganda Christian University", "0700 153, 556", "Mukono", True)
+donor_Jude = Donor("Jude", "0700 155, 556", "Jinja", False)
+donor_Zadiya = Donor("Zadiya", "0700 133, 556", "Hoima", False)
+
+# Inventory
+inventory_kasese_store = Inventory("Kasese Community Relifee Store")
+inventory_karamoja_store = Inventory("Karamoja Community Relifee Store")
+
+# UG Govt donation
+ug_Govt_donation = Donation(donor_UG_Gvt, [])
+
+isAdded = inventory_kasese_store.add_donation(ug_Govt_donation)
+if isAdded:
+    print("Donation added")
+else:
+    print("Donation not added")
+
