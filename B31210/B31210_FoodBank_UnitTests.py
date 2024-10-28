@@ -48,36 +48,37 @@ class TestRefugee(unittest.TestCase):
 class TestFoodandUnitClasses(unittest.TestCase):
     def setUp(self):
         """Setting up test cases with sample data."""
-        self.unit = Unit("Rice", 10)
-        self.food = Food("Rice", self.unit)
+        self.unit = Unit("Kgs")
+        self.food = Food("Rice", self.unit, 10)
 
     def test_unit_initialization(self):
         """Test initialization of Unit."""
         self.assertIsInstance(self.unit, Unit)
-        self.assertEqual(self.unit.name, "Rice")
-        self.assertNotEqual(self.unit.name, "Beans")
-        self.assertEqual(self.unit.quantity_per_family_member, 10)
+        self.assertEqual(self.unit.name, "Kgs")
+        self.assertNotEqual(self.unit.name, "litres")
         self.assertIsNotNone(self.unit.id)
 
     def test_get_unit_cap(self):
         """Test get_unit_cap method of Unit."""
-        self.assertEqual(self.unit.get_unit_cap(), 10)
+        self.assertEqual(self.food.get_unit_cap(), 10)
 
     def test_food_initialization(self):
         """Test initialization of Food."""
         self.assertIsInstance(self.food, Food)
         self.assertEqual(self.food.name, "Rice")
+        self.assertNotEqual(self.food.name, "Beans")
+        self.assertEqual(self.food.quantity_per_family_member, 10)
         self.assertIs(self.food.unit, self.unit)  # Check if both evaluate to the same object
         self.assertIsNotNone(self.food.id)  # Ensure an ID is generated
 
     def test_food_unit_type_check(self):
         """Test Food initialization with invalid unit type."""
         with self.assertRaises(TypeError):
-            Food("Flour", "Six")
+            Food("Flour", "Kgs", 10)
 
     def test_setter_valid_unit(self):
         """Test setter for valid unit."""
-        new_unit = Unit("Flour", 8)
+        new_unit = Unit("Kgs")
         self.food.unit = new_unit
         self.assertIs(self.food.unit, new_unit)
 
@@ -88,7 +89,7 @@ class TestFoodandUnitClasses(unittest.TestCase):
 
     def test_get_details(self):
         """Test get_details() of Food."""
-        expected = f"Food ID: {self.food.id}, Food Name: Rice, Unit of Release: 10"
+        expected = f"Food ID: {self.food.id}, Name: Rice, Unit of release: 10"
         self.assertEqual(self.food.get_details(), expected)
 
 

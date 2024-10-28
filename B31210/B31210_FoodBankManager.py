@@ -10,7 +10,7 @@ class FoodManager:
     dict_donor_list = {}
     dict_refugee_list = {}
     dict_supply_list = {}
-    dict_donation_list = []
+    dict_donation_list = {}
     dict_distribution_list = {}
     store_inventory = Inventory()
 
@@ -178,12 +178,12 @@ class FoodManager:
                 print("Input [donation id] !")
                 user_input = input()
                 try:
-                    donation: Donation = self.dict_donation_list[user_input_list[0]]
+                    donation: Donation = self.dict_donation_list[user_input.split()]
                     print(donation.get_donation())
                 except KeyError:
                     print(f"Donation id '{user_input.split()}' not found. Please try again !")
-        except:
-            print("An exception happened with donations, please try again -------------")
+        except Exception as error:
+            print("An exception happened with donations, please try again ", error)
         finally:
             self.show_menu("5") # Donations Menu
     
