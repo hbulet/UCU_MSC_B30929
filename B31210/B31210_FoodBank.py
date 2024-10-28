@@ -69,7 +69,7 @@ class Unit:
         self.name = _name
     
     def get_details(self):
-        return "Unit    Name: " + self.name + ", ID: " + self.id
+        return f"Unit ID: {self.id},  Name: {self.name}"
 
 class Food:
     """
@@ -105,7 +105,7 @@ class Food:
 
     def get_details(self):
         """Returns food details."""
-        return f"Food   Name: {self.name}, Unit of Release: {self.get_unit_cap()}, Name: {self.id}"
+        return f"Food ID: {self.id}  Name: {self.name}, Unit of release: {self.get_unit_cap()}"
     
     def quantity_needed_for_distribution(self, num_refugees):
         """Calculates the total quantity needed of a particulat food based on the number of refugees."""
@@ -147,6 +147,9 @@ class Supply:
 
     def get_quantity_available(self):
         return self.quantity_available
+    
+    def get_details(self):
+        return f"Supply ID: {self.id},  Quantity: {self.quantity}, Quantity available {self.quantity_available}, Expiry {self.expiration_date}. ({self.food_item.get_details()})"
 
 class Donation:
     """
@@ -183,24 +186,35 @@ class Donation:
             "id": self.id,
             "donor": self.donor.get_details(),
             "donation_date": self.donation_date,
-            "supplies": [supply.food_item.get_details() for supply in self.supply_list]
+            "supplies": [supply.get_details() for supply in self.supply_list] if self.supply_list is not None else []
         }
 
 class Distribution:
     def __init__(self, release_date, refugees_list=None, food_list=None):
         self.id = str(uuid.uuid1())
         self.release_date = release_date
-        self.refugees_list = refugees_list if refugees_list is not None else []
-        self.food_list = food_list if food_list is not None else []
+        self.refugees_list = refugees_list if refugees_list is not None else {}
+        self.food_list = food_list if food_list is not None else {}
 
-    def add_refugee(self, refugee):
+    def add_refugee(self, refugee: Refugee):
         """Adds refugee to the list of those receiving food."""
         if refugee not in self.refugees_list:
-            self.refugees_list.append(refugee)
+            self.refugees_list[refugee.id] = refugee
 
-    def add_food(self, food_item):
+    def add_food(self, food_item: Food):
         """Adds food to the distribution list."""
-        self.food_list.append(food_item)
+        self.food_list[food_item.id] = food_item
+
+    def get_distribution(self):
+        """
+        Retrieves details of the distribution, including date, refugee list, and food list.
+        """
+        return {
+            "id": self.id,
+            "release_date": self.release_date,
+            "foods": [self.food_list[food].get_details() for food in self.food_list],
+            "refugees": [self.refugees_list[refugee].get_details() for refugee in self.refugees_list]
+        }
 
     def distribute(self, inventory):
         """Distributes food and updates inventory."""
