@@ -231,11 +231,12 @@ class Distribution:
 
 class Inventory:
     def __init__(self):
-        self.supplies_list = []
-        self.distribution_list = []
-        self.donation_list = []
-        self.donors_list = []
-        self.refugees_list = []
+        self.dict_supplies_list = {}
+        self.dict_distribution_list = {}
+        self.dict_donation_list = {}
+        self.dict_donors_list = {}
+        self.dict_refugees_list = {}
+        self.dict_stock_count_list = {}
 
     def get_stock(self):
         """Displays all food items in stock."""

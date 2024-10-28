@@ -10,7 +10,7 @@ class FoodManager:
     dict_donor_list = {}
     dict_refugee_list = {}
     dict_supply_list = {}
-    dict_donation_list = {}
+    dict_donation_list = []
     dict_distribution_list = {}
     store_inventory = Inventory()
 
@@ -115,6 +115,7 @@ class FoodManager:
                 print("Donations available ---------------------------------------------------")
                 for _donation in self.dict_donation_list:
                     print(self.dict_donation_list[_donation].get_donation())
+
             elif _menuItem == "52": # Create Donation
                 self.show_menu("3") # Show Available Donors
                 print("Input the donor id from the above list for this donation !")
@@ -129,6 +130,7 @@ class FoodManager:
                         print(f"Donation with ID '{new_donation.id}' created successfully !")
                     except KeyError:
                         print("Donor with id '' not found. Donations not created, please try again !")
+
             elif _menuItem == "53": # Add Donor
                 self.show_menu("3") # Show Available Donors
                 self.show_menu("51") # Available Donations
@@ -167,8 +169,10 @@ class FoodManager:
                             print("Donations created successfully !")
                         except KeyError:
                             print(f"Donation id '{user_input_list[0]}' or food id '{user_input_list[1]}' not found. Supply not added, please try again !")
+                
                 else:
                     print("First create a donation to add supplies !")
+
             elif _menuItem == "55": # Show Donation Details
                 self.show_menu("51") # Available Donations
                 print("Input [donation id] !")
@@ -232,9 +236,36 @@ class FoodManager:
 
     def manage_inventory(self, _menuItem):
         try:
-            pass
-        except:
-            print("An exception happened with inventory, please try again -------------")
+            if _menuItem == "71": # Available Stock 
+                print("Available stock in inventory ---------------------------------------------------")
+                registered_food_id_list = list(self.dict_food_list)
+                for _food_id in registered_food_id_list:
+                    try:
+                        print(f"Food {self.dict_food_list[_food_id].name}: {self.store_inventory.dict_stock_count_list[_food_id]}")
+                    except KeyError:
+                        print(f"Food {self.dict_food_list[_food_id].name}: 0")  
+
+            elif _menuItem == "72": # Add Donation
+                self.show_menu("51") # Available Donations
+                print("Input donation id from the above list to add to inventory !")
+                user_input = input()
+                try:
+                    if user_input.strip() in self.dict_donation_list:
+                        _donation: Donation = self.dict_donation_list[user_input.strip()]
+                        if len(_donation.supply_list) > 0:
+                            for _supply in _donation.supply_list:
+                                if _supply in self.dict_supplies_list:
+                                    self.store_inventory.dict_donation_list 
+                            print(f"Donation with ID '{_donation.id}' added to inventory successfully !")
+                        else:
+                            print("Supply list is zero. Donations not added to inventory, please try again !")
+                    else:
+                        print(f"Donation id '{user_input.strip()}' not found. Donations not added to inventory, please try again !")
+                except KeyError:
+                    print("Item id not found. Donations not added to inventory, please try again !")
+
+        except Exception as error:
+            print("An exception happened with inventory, please try again", error)
         finally:
             self.show_menu("7")
 
@@ -242,18 +273,18 @@ try:
    user_food_manager = FoodManager()
    user_food_manager.show_menu("")
    while True:
-       user_menu = input()
-       if user_menu.strip() == "1" or user_menu.strip() == "2" or user_menu.strip() == "3" \
-            or user_menu.strip() == "4" or user_menu.strip() == "5" or user_menu.strip() == "6" \
-            or user_menu.strip() == "7":
-           user_food_manager.show_menu(user_menu.strip())
-       elif user_menu.strip()[:1] == "5":
-           user_food_manager.manage_donations(user_menu.strip())
-       elif user_menu.strip()[:1] == "6":
-           user_food_manager.manage_distributions(user_menu.strip())
-       elif user_menu.strip()[:1] == "7":
-           user_food_manager.show_menu("")
-       elif user_menu.strip() == "0":
+       user_input = input()
+       if user_input.strip() == "1" or user_input.strip() == "2" or user_input.strip() == "3" \
+            or user_input.strip() == "4" or user_input.strip() == "5" or user_input.strip() == "6" \
+            or user_input.strip() == "7":
+           user_food_manager.show_menu(user_input.strip())
+       elif user_input.strip()[:1] == "5":
+           user_food_manager.manage_donations(user_input.strip())
+       elif user_input.strip()[:1] == "6":
+           user_food_manager.manage_distributions(user_input.strip())
+       elif user_input.strip()[:1] == "7":
+           user_food_manager.manage_inventory(user_input.strip())
+       elif user_input.strip() == "0":
            user_food_manager.show_menu("")
        else:
            print("No Menu Item Selected")
