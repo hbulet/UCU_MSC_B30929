@@ -5,8 +5,8 @@ from GUIControlsStudentIDDlg import StudentIDDlg
 from GUIControlsLoanCalculator import LoanCalculator
 from GUIControlsFeedBackDlg import FeedBackDlg
 from scipy import misc
-import imageio
-##from scipy.misc import toimage #for displaying an image in photoviewer
+#import imageio
+#from scipy.misc import toimage #for displaying an image in photoviewer
 
 class MyFrame(Frame):
  
@@ -110,8 +110,8 @@ class MyFrame(Frame):
         opts['initialdir'] = 'd:\\PythonRM'
         opts['filetypes'] = [('all files', '.*'), ('jpeg files', '.jpg')]
         fname = filedialog.askopenfilename(**options) # file in read mode
-        #img = misc.imread(fname) # read the image file
-        img = imageio.imread(fname)
+        img = misc.imread(fname) # read the image file
+        #img = imageio.imread(fname)
         toimage(img).show()
 
     def mnuSaveFileClick(self):
